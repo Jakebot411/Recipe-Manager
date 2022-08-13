@@ -57,12 +57,7 @@ def compile_raw_ingredients(input_recipes: list) -> dict[str, int]:
 
     # Compiles all the ingredients into a dictionary
     for ingredient in ingredients_list:
-        if ingredient[0] not in ingredients_dict:
-            ingredients_dict[ingredient[0]] = ingredient[1]
-        else:
-            ingredients_dict[ingredient[0]] += ingredient[1]
-    
-    return ingredients_dict
+        ingredients_dict[ingredient[0]] = ingredients_dict.get(ingredient[0], 0) + ingredient[1]
 
 # Compiles a list of non-atomic ingredients given an input list of recipes - Does not include any atomic ingredients
 def compile_non_atomic_ingredients(input_recipes: list) -> dict[str, int]:
@@ -74,12 +69,7 @@ def compile_non_atomic_ingredients(input_recipes: list) -> dict[str, int]:
 
     # Compiles all the ingredients into a dictionary
     for ingredient in ingredients_list:
-        if ingredient[0].recipe_product not in ingredients_dict:
-            ingredients_dict[ingredient[0].recipe_product] = ingredient[1]
-        else:
-            ingredients_dict[ingredient[0].recipe_product] += ingredient[1]
-    
-    return ingredients_dict
+        ingredients_dict[ingredient[0]] = ingredients_dict.get(ingredient[0], 0) + ingredient[1]
     
 
 titanium_alloy = Recipe("Titanium Alloy", "Forge", {
