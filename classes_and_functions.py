@@ -109,6 +109,3 @@ dwarven_chestplate = Recipe("Dwarven Chestplate", "Anvil", {
     "Steel" : 10,
     "Elven Blood" : 5
 })
-
-# print(compile_raw_ingredients([sword, dwarven_chestplate]))
-print(compile_non_atomic_ingredients([sword]))
