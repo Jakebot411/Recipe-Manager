@@ -30,13 +30,14 @@ class Recipe:
 
         return raw_materials
 
-def compile_ingredients(recipes: list) -> dict[str, int]:
+def compile_ingredients(input_recipes: list) -> dict[str, int]:
 
-    # Compiles a list of ingredients from all of the recieps from the input list including non-atomic ingredients
-    ingredients_list = [ingredient for recipe in recipes for ingredient in recipe.raw_materials] 
+    # Creates a list of all the ingredients from input_recipes including non-atomic ingredients
+    ingredients_list = [ingredient for recipe in input_recipes for ingredient in recipe.raw_materials] 
 
     ingredients_dict = {}
 
+    # Compiles all the ingredients into a dictionary
     for ingredient in ingredients_list:
         if ingredient[0] not in ingredients_dict:
             ingredients_dict[ingredient[0]] = ingredient[1]
