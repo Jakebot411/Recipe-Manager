@@ -12,12 +12,10 @@ class Recipe:
     def raw_materials(self) -> list[tuple[str, int]]:
         raw_materials = []
 
-        # Iterates through the dictionary of ingredients
         for ingredient, amount in self.ingredients.items():
 
             if isinstance(ingredient, Recipe):
                 
-                # Iterates through the ingredients of the Recipe object
                 for sub_ingredient in ingredient.raw_materials:
                     
                     # Corrects for the amount of non-atomic ingredients in a recipe
@@ -32,22 +30,23 @@ class Recipe:
 
     @property
     def non_atomic_materials(self) -> list[tuple[str, int,]]:
-        temp = []
+        non_atomic_materials = []
 
+        # Iterates through the recipes until all non-atomic ingredients have been added to non_atomic_materials
         for ingredient, amount in self.ingredients.items():
 
             if isinstance(ingredient, Recipe):
 
-                temp.append((ingredient, amount))
+                non_atomic_materials.append((ingredient, amount))
 
                 for sub_ingredient in ingredient.non_atomic_materials:
                     
-                    temp.append(sub_ingredient)
+                    non_atomic_materials.append(sub_ingredient)
 
             else:
                 pass       
 
-        return temp
+        return non_atomic_materials
 
 def compile_raw_ingredients(input_recipes: list) -> dict[str, int]:
 
