@@ -1,5 +1,3 @@
-from example_objects import *
-
 class Recipe:
 
     # Atomic means it's already a raw material
@@ -14,10 +12,12 @@ class Recipe:
     def raw_materials(self) -> list[tuple[str, int]]:
         raw_materials = []
 
+        # Iterates through the dictionary of ingredients
         for ingredient, amount in self.ingredients.items():
 
             if isinstance(ingredient, Recipe):
-
+                
+                # Iterates through the ingredients of the Recipe object
                 for sub_ingredient in ingredient.raw_materials:
                     
                     # Corrects for the amount of non-atomic ingredients in a recipe
@@ -30,9 +30,9 @@ class Recipe:
 
         return raw_materials
 
-def compile_ingredients(input_recipes: list) -> dict[str, int]:
+def compile_raw_ingredients(input_recipes: list) -> dict[str, int]:
 
-    # Creates a list of all the ingredients from input_recipes including non-atomic ingredients
+    # Creates a list of all the ingredients from input_recipes including the ingredients of non-atomic elements
     ingredients_list = [ingredient for recipe in input_recipes for ingredient in recipe.raw_materials] 
 
     ingredients_dict = {}
@@ -45,3 +45,56 @@ def compile_ingredients(input_recipes: list) -> dict[str, int]:
             ingredients_dict[ingredient[0]] += ingredient[1]
     
     return ingredients_dict
+
+# Compiles a list of non-atomic ingredients given an input list of recipes - Does not include any atomic ingredients
+def compile_non_atomic_ingredients(input_recipes: list) -> dict[str, int]:
+    materials = []
+
+    # Generates a list of tuple(str, int) of all non-atomic ingredients derived from input_recipes
+    for recipe in input_recipes:
+
+        for ingredient, amount in recipe.ingredients.items():
+
+            if isinstance(ingredient, Recipe):
+                materials.append((ingredient.recipe_product, amount))
+            else:
+                pass
+
+    ingredients_dict = {}
+
+    # Compiles all the ingredients into a dictionary
+    for ingredient in materials:
+        if ingredient[0] not in ingredients_dict:
+            ingredients_dict[ingredient[0]] = ingredient[1]
+        else:
+            ingredients_dict[ingredient[0]] += ingredient[1]
+    
+    return ingredients_dict
+
+titanium_alloy = Recipe("Titanium Alloy", "Forge", {
+    "Titanium Bar" : 1,
+    "Foo Bar" : 3
+})
+
+handle = Recipe("Handle", "Workbench", {
+    "Leather" : 4,
+    titanium_alloy : 2,
+    "Wood" : 3
+})
+
+blade = Recipe("Sword Blade", "Anvil", {
+    "Steel" : 11,
+    titanium_alloy : 7,
+
+})
+
+sword = Recipe("Sword", "Anvil", {
+    blade : 1,
+    handle : 1,
+    "Love" : 1
+})
+
+dwarven_chestplate = Recipe("Dwarven Chestplate", "Anvil", {
+    "Steel" : 10,
+    "Elven Blood" : 5
+})
