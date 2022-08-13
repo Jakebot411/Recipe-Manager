@@ -30,6 +30,25 @@ class Recipe:
 
         return raw_materials
 
+    @property
+    def non_atomic_materials(self) -> list[tuple[str, int,]]:
+        temp = []
+
+        for ingredient, amount in self.ingredients.items():
+
+            if isinstance(ingredient, Recipe):
+
+                temp.append((ingredient, amount))
+
+                for sub_ingredient in ingredient.non_atomic_materials:
+                    
+                    temp.append(sub_ingredient)
+
+            else:
+                pass       
+
+        return temp
+
 def compile_raw_ingredients(input_recipes: list) -> dict[str, int]:
 
     # Creates a list of all the ingredients from input_recipes including the ingredients of non-atomic elements
@@ -48,28 +67,21 @@ def compile_raw_ingredients(input_recipes: list) -> dict[str, int]:
 
 # Compiles a list of non-atomic ingredients given an input list of recipes - Does not include any atomic ingredients
 def compile_non_atomic_ingredients(input_recipes: list) -> dict[str, int]:
-    materials = []
 
     # Generates a list of tuple(str, int) of all non-atomic ingredients derived from input_recipes
-    for recipe in input_recipes:
-
-        for ingredient, amount in recipe.ingredients.items():
-
-            if isinstance(ingredient, Recipe):
-                materials.append((ingredient.recipe_product, amount))
-            else:
-                pass
+    ingredients_list = [ingredient for recipe in input_recipes for ingredient in recipe.non_atomic_materials]
 
     ingredients_dict = {}
 
     # Compiles all the ingredients into a dictionary
-    for ingredient in materials:
-        if ingredient[0] not in ingredients_dict:
-            ingredients_dict[ingredient[0]] = ingredient[1]
+    for ingredient in ingredients_list:
+        if ingredient[0].recipe_product not in ingredients_dict:
+            ingredients_dict[ingredient[0].recipe_product] = ingredient[1]
         else:
-            ingredients_dict[ingredient[0]] += ingredient[1]
+            ingredients_dict[ingredient[0].recipe_product] += ingredient[1]
     
     return ingredients_dict
+    
 
 titanium_alloy = Recipe("Titanium Alloy", "Forge", {
     "Titanium Bar" : 1,
@@ -98,3 +110,6 @@ dwarven_chestplate = Recipe("Dwarven Chestplate", "Anvil", {
     "Steel" : 10,
     "Elven Blood" : 5
 })
+
+# print(compile_raw_ingredients([sword, dwarven_chestplate]))
+print(compile_non_atomic_ingredients([sword]))
