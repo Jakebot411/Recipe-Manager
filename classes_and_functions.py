@@ -45,5 +45,3 @@ def compile_ingredients(input_recipes: list) -> dict[str, int]:
             ingredients_dict[ingredient[0]] += ingredient[1]
     
     return ingredients_dict
-
-print(compile_ingredients([sword, dwarven_chestplate]))
