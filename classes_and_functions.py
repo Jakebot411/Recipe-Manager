@@ -40,11 +40,13 @@ class Recipe:
                 non_atomic_materials.append((ingredient, amount))
 
                 for sub_ingredient in ingredient.non_atomic_materials:
-                    
-                    non_atomic_materials.append(sub_ingredient)
+
+                    sub_ingredient = list(sub_ingredient)
+                    sub_ingredient[1] *= amount
+                    non_atomic_materials.append(tuple(sub_ingredient))
 
             else:
-                pass       
+                pass  
 
         return non_atomic_materials
 
@@ -59,6 +61,8 @@ def compile_raw_ingredients(input_recipes: list) -> dict[str, int]:
     for ingredient in ingredients_list:
         ingredients_dict[ingredient[0]] = ingredients_dict.get(ingredient[0], 0) + ingredient[1]
 
+    return ingredients_dict
+
 # Compiles a list of non-atomic ingredients given an input list of recipes - Does not include any atomic ingredients
 def compile_non_atomic_ingredients(input_recipes: list) -> dict[str, int]:
 
@@ -69,33 +73,51 @@ def compile_non_atomic_ingredients(input_recipes: list) -> dict[str, int]:
 
     # Compiles all the ingredients into a dictionary
     for ingredient in ingredients_list:
-        ingredients_dict[ingredient[0]] = ingredients_dict.get(ingredient[0], 0) + ingredient[1]
+        ingredients_dict[ingredient[0].recipe_product] = ingredients_dict.get(ingredient[0].recipe_product, 0) + ingredient[1]
+
+    return ingredients_dict
     
+"""
+Example Recipe Objects for Testing
+"""
 
-titanium_alloy = Recipe("Titanium Alloy", "Forge", {
-    "Titanium Bar" : 1,
-    "Foo Bar" : 3
+infused_coal = Recipe("Infused Coal", "Oil Machine", {
+    "Coal" : 2,
+    "Lioren Oil" : 4
 })
 
-handle = Recipe("Handle", "Workbench", {
-    "Leather" : 4,
-    titanium_alloy : 2,
-    "Wood" : 3
+titanium_bar = Recipe("Titanium Bar", "Smelter", {
+    "Titanium Ore" : 3,
+    "Coal" : 2
 })
 
-blade = Recipe("Sword Blade", "Anvil", {
-    "Steel" : 11,
-    titanium_alloy : 7,
-
+foo_bar = Recipe("Foo Bar", "Smelter", {
+    "Foo Ore" : 3,
+    "Coal" : 2
 })
 
-sword = Recipe("Sword", "Anvil", {
-    blade : 1,
-    handle : 1,
-    "Love" : 1
+titanium_foo_alloy = Recipe("Foo-Titanium Alloy", "Forge", {
+    titanium_bar : 1,
+    foo_bar : 2,
+    "Coal" : 3
 })
 
-dwarven_chestplate = Recipe("Dwarven Chestplate", "Anvil", {
-    "Steel" : 10,
-    "Elven Blood" : 5
+titanium_foo_blade = Recipe("Titanium-Foo Blade", "Forge", {
+    titanium_foo_alloy : 9,
+    titanium_bar : 5,
+    infused_coal : 3
+})
+
+sturdy_handle = Recipe("Sturdy Handle", "Forge", {
+    titanium_foo_alloy : 4,
+    titanium_bar : 2,
+    "Leather" : 3,
+})
+
+foo_sword = Recipe("Foo Sword", "Forge", {
+    titanium_foo_blade : 1,
+    sturdy_handle : 1,
+    foo_bar : 19,
+    infused_coal : 5,
+    "Essence of Foo" : 11
 })
